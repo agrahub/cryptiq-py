@@ -1,6 +1,6 @@
 [project]
 name = "cryptiq"
-version = "0.1.0"
+version = "0.1.1"
 description = "A modern cryptography utilities library for Python, providing ergonomic primitives for key management, encryption, hashing, signatures, tokens, and secret handling."
 authors = [
     { name = "Agra Bima Yuda", email = "hub.agrayuda@gmail.com" }

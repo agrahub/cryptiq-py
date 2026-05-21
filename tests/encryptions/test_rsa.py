@@ -25,7 +25,7 @@ def test_rsa_encrypt_decrypt_roundtrip_bytes() -> None:
     plaintext = b"hello secure world"
 
     ciphertext = encrypt(public, plaintext)
-    decrypted = decrypt(ciphertext, private)
+    decrypted = decrypt(private, ciphertext)
 
     assert isinstance(ciphertext, bytes)
     assert isinstance(decrypted, bytes)
@@ -38,7 +38,7 @@ def test_rsa_encrypt_decrypt_roundtrip_str() -> None:
     plaintext = "hello secure world"
 
     ciphertext = encrypt(public, plaintext)
-    decrypted = decrypt(ciphertext, private)
+    decrypted = decrypt(private, ciphertext)
 
     assert isinstance(ciphertext, str)
     assert isinstance(decrypted, str)
@@ -63,8 +63,8 @@ def test_decrypt_output_matches_ciphertext_type() -> None:
     c1 = encrypt(public, b"abc")
     c2 = encrypt(public, "abc")
 
-    assert isinstance(decrypt(c1, private), bytes)
-    assert isinstance(decrypt(c2, private), str)
+    assert isinstance(decrypt(private, c1), bytes)
+    assert isinstance(decrypt(private, c2), str)
 
 
 # =========================================================
@@ -80,7 +80,7 @@ def test_decrypt_with_wrong_key_fails() -> None:
 
     # wrong private key should raise ValueError (OAEP failure)
     with pytest.raises(ValueError):
-        decrypt(ciphertext, private2)
+        decrypt(private2, ciphertext)
 
 
 # =========================================================
@@ -97,4 +97,4 @@ def test_ciphertext_is_base64_encoded() -> None:
     assert isinstance(ciphertext.encode(), bytes)
 
     # ensure decrypt still works (primary validation)
-    assert decrypt(ciphertext, private) == "hello"
+    assert decrypt(private, ciphertext) == "hello"

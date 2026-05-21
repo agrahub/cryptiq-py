@@ -64,10 +64,10 @@ def encrypt(key: RsaKey, plaintext: BytesOrStr) -> BytesOrStr:
 
 
 @overload
-def decrypt(ciphertext: bytes, key: RsaKey) -> bytes: ...
+def decrypt(key: RsaKey, ciphertext: bytes) -> bytes: ...
 @overload
-def decrypt(ciphertext: str, key: RsaKey) -> str: ...
-def decrypt(ciphertext: BytesOrStr, key: RsaKey) -> BytesOrStr:
+def decrypt(key: RsaKey, ciphertext: str) -> str: ...
+def decrypt(key: RsaKey, ciphertext: BytesOrStr) -> BytesOrStr:
     """
     Decrypt an RSA OAEP-encrypted message using SHA256.
 
