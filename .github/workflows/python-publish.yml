@@ -33,7 +33,7 @@ jobs:
       id-token: write
     environment:
       name: pypi
-      url: https://pypi.org/p/typal
+      url: https://pypi.org/p/cryptiq
     steps:
       - name: Retrieve release distributions
         uses: actions/download-artifact@v4
