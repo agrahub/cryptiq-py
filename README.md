@@ -1,126 +1,123 @@
-# Python Package Template
+# cryptiq
 
-Production-ready Python package template with modern tooling, strict typing, and scalable project structure.
+A lightweight, backend-agnostic cryptography abstraction layer for Python.
+
+## Overview
+
+cryptiq provides a unified and strongly-typed interface over multiple cryptography backends.
+
+It focuses on consistency, composability, and safe defaults while allowing flexibility between implementations such as `cryptography` and `pycryptodome`.
+
+---
 
 ## Features
 
-- Modern `uv`-based workflow
-- `src/` package layout
-- Ruff linting and formatting
-- Pyright static type checking
-- pytest testing setup
-- GitHub Actions CI
-- PEP 621 packaging
-- Pre-configured pre-commit hooks
-- Typed package support via `py.typed`
+- Backend-agnostic cryptographic API
+- RSA key generation and loading
+- Unified encryption/decryption interface
+- Strong typing with overload-safe APIs
+- Support for multiple key formats (PEM/bytes/string)
+- Pluggable backend system (`cryptography`, `pycryptodome`)
+- Clean separation of crypto logic and type definitions
 
 ---
 
-## Project Structure
+## Installation
 
-```text
-.
-├── .github/
-│   └── workflows/
-├── src/
-│   └── package_name/
-├── tests/
-├── .gitignore
-├── .pre-commit-config.yaml
-├── LICENSE
-├── pyproject.toml
-└── README.md
+Using uv:
+
+```bash
+uv add cryptiq
+```
+
+Or pip:
+
+```bash
+pip install cryptiq
 ```
 
 ---
 
-## Requirements
+## Usage
 
-- Python 3.13+
-- `uv`
+### Key Generation
 
-Install `uv` by following the official documentation:
+```python
+from cryptiq.enums import Backend
+from cryptiq.rsa import generate_private
 
-- https://docs.astral.sh/uv/getting-started/installation/
-
----
-
-## Quick Start
-
-### Create virtual environment
-
-```bash
-uv venv
-```
-
-### Install dependencies
-
-```bash
-uv sync
-```
-
-### Run tests
-
-```bash
-uv run pytest
-```
-
-### Run linting
-
-```bash
-uv run ruff check .
-```
-
-### Run formatting
-
-```bash
-uv run ruff format .
-```
-
-### Run type checking
-
-```bash
-uv run pyright
+keypair = generate_private(Backend.CRYPTOGRAPHY)
 ```
 
 ---
 
-## Included Tooling
+### Loading Keys
 
-### Ruff
+```python
+from cryptiq.keys import load_private
+from cryptiq.enums import Backend
 
-Used for:
-- linting
-- formatting
-- import sorting
-
-### Pyright
-
-Used for strict static type checking.
-
-### pytest
-
-Used for testing.
-
-### pre-commit
-
-Runs automated checks before commits.
+key = load_private(
+    Backend.CRYPTOGRAPHY,
+    path="private.pem",
+    password=None,
+)
+```
 
 ---
 
-## Design Principles
+### Encryption
 
-This template prioritizes:
+```python
+from cryptiq.rsa import encrypt
+from cryptiq.enums import Backend
 
-- simplicity
-- strict typing
-- reproducibility
-- scalable project structure
-- modern Python standards
-- minimal tooling friction
+ciphertext = encrypt(
+    key,
+    "hello world"
+)
+```
 
 ---
 
-## License
+### Bytes Mode
 
-MIT
+```python
+ciphertext = encrypt(key, b"hello world")
+```
+
+---
+
+## Design Philosophy
+
+cryptiq follows these principles:
+
+- Backend abstraction without leaking implementation details
+- Strong typing with explicit overloads
+- Consistent input/output behavior across APIs
+- Prefer safe defaults over flexible ambiguity
+- Keep crypto primitives simple and composable
+
+---
+
+## Non-goals
+
+cryptiq does NOT aim to:
+
+- Replace full-featured crypto libraries like `cryptography`
+- Implement low-level cryptographic primitives from scratch
+- Provide opinionated security policies (key storage, rotation, etc.)
+- Become a framework-level security system
+- Hide cryptographic behavior behind excessive abstraction
+
+---
+
+## Architecture Notes
+
+cryptiq is built around a backend dispatch model:
+
+- `Backend` enum selects implementation
+- Each backend returns its native key types
+- Public APIs normalize behavior through typed unions and overloads
+
+This allows flexibility while keeping a consistent external API surface.
